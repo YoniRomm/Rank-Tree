@@ -20,11 +20,14 @@ public class AVLTree {
 
     public static void main(String [] args){
         AVLTree t1 = new AVLTree();
-//        System.out.println(t1.getRoot());
+        System.out.println(t1.getRoot());
+        System.out.println(t1.empty());
         t1.insert(5,false);
+        System.out.println(t1.getRoot());
+        System.out.println(t1.empty());
         t1.insert(3,false);
         t1.insert(6,false);
-//        AVLTree.print(t1.getRoot());
+        AVLTree.print(t1.getRoot());
     }
 
 
@@ -34,6 +37,7 @@ public class AVLTree {
      * This constructor creates an empty AVLTree.
      */
     public AVLTree(){
+        this.virtualNode.setHeight(-1);
 
     }
 
@@ -87,12 +91,12 @@ public class AVLTree {
         }
 
 
-        while(x!= null){
+        while(x.isRealNode()){
             y = x;
             if(k<x.key) {
                 x = x.getLeft();
             }
-            if(k > x.key){
+            else if(k > x.key){
                 x=x.getRight();
             }
             else {
@@ -110,9 +114,7 @@ public class AVLTree {
         }
         int counter=0;
         AVLNode node_to_rotate = virtualNode;
-        while(y != null){
-//            System.out.println(y.getLeft().getKey());
-//            int height = z.getHeight();
+        while(y.isRealNode()){
             int left_height = y.getLeft().getHeight();
             int right_height = y.getRight().getHeight();
 
@@ -135,7 +137,9 @@ public class AVLTree {
                 counter++;
             }
         }
-        doRotation(node_to_rotate);
+        if(node_to_rotate.isRealNode()){
+            doRotation(node_to_rotate);
+        }
         return counter;
     }
 
@@ -248,7 +252,7 @@ public class AVLTree {
      * Returns the root AVL node, or null if the tree is empty
      */
     public AVLNode getRoot() {
-        return null;
+        return this.rootNode;
     }
 
     /**
