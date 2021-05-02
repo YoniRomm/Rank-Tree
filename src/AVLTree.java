@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -17,17 +18,34 @@ public class AVLTree {
 
     private AVLNode rootNode;
     private final AVLNode virtualNode = new AVLNode(-1,false);
+    private int size = 0;
+
 
     public static void main(String [] args){
         AVLTree t1 = new AVLTree();
-        System.out.println(t1.getRoot());
-        System.out.println(t1.empty());
-        t1.insert(5,false);
-        System.out.println(t1.getRoot());
-        System.out.println(t1.empty());
-        t1.insert(3,false);
-        t1.insert(6,false);
+        AVLTree t2 = new AVLTree();
+
+
+
+        t1.insert(18,false);
+        t1.insert(20,true);
+        t1.insert(19,false);
+        t1.insert(16,false);
+        t1.insert(17,false);
         AVLTree.print(t1.getRoot());
+
+        int [] arr = t2.keysToArray();
+        boolean [] arr2 = t2.infoToArray();
+
+        System.out.println(Arrays.toString(arr));
+        System.out.println(Arrays.toString(arr2));
+
+//        t1.insert(9,false);
+//        t1.insert(7,false);
+
+
+
+
     }
 
 
@@ -38,7 +56,6 @@ public class AVLTree {
      */
     public AVLTree(){
         this.virtualNode.setHeight(-1);
-
     }
 
     /**
@@ -82,6 +99,10 @@ public class AVLTree {
      * returns -1 if an item with key k already exists in the tree.
      */
     public int insert(int k, boolean i) {
+        if(search(k) != null){
+            return 0;
+        }
+        setSize(this.size + 1);
         AVLNode y = null;
         AVLNode x = this.rootNode;
         AVLNode z = new AVLNode(k,i);
@@ -89,8 +110,6 @@ public class AVLTree {
             insertFirst(k,i);
             return 0;
         }
-
-
         while(x.isRealNode()){
             y = x;
             if(k<x.key) {
@@ -135,6 +154,7 @@ public class AVLTree {
                     node_to_rotate=y;
                 }
                 counter++;
+                break;
             }
         }
         if(node_to_rotate.isRealNode()){
@@ -151,35 +171,72 @@ public class AVLTree {
         return node.getLeft().getHeight() - node.getRight().getHeight();
     }
 
+    private void rotateLeft(AVLNode node){
+        AVLNode parent = node.getParent();
+        AVLNode child = node.getRight();
+        boolean isRoot = this.rootNode.getKey() == node.getKey();
+        boolean isRight = false;
+        if(!isRoot){
+            isRight = parent.getRight().getKey() == node.getKey();
+        }
+        if(isRoot){
+            this.rootNode = child;
+        }
+        node.setRight(child.getLeft());
+        child.setLeft(node);
+        node.setParent(child);
+        if(isRight){
+            parent.setRight(child);
+        } else if(!isRoot){
+            parent.setLeft(child);
+        }
+        child.setParent(parent);
+        node.height = Math.max(node.getLeft().getHeight(),node.getRight().getHeight())+1;
+
+    }
+
+    private void rotateRight(AVLNode node){
+        AVLNode parent = node.getParent();
+        AVLNode child = node.getLeft();
+        boolean isRoot = this.rootNode.getKey() == node.getKey();
+        boolean isLeft = false;
+        if(!isRoot){
+            isLeft = parent.getLeft().getKey() == node.getKey();
+        }
+        if(isRoot){
+            this.rootNode = child;
+        }
+        node.setLeft(child.getRight());
+        child.setRight(node);
+        node.setParent(child);
+        if(isLeft){
+            parent.setLeft(child);
+        } else if(!isRoot){
+            parent.setRight(child);
+        }
+        child.setParent(parent);
+        node.height = Math.max(node.getLeft().getHeight(),node.getRight().getHeight())+1;
+    }
+
     private void doRotation(AVLNode node){
         int bf = getBF(node);
         AVLNode parent = node.getParent();
-        boolean isRight = parent.getRight().getKey() == node.getKey();
         if (bf == -2){
             if(getBF(node.getRight()) == 1){
+                rotateRight(node.getRight());
+                rotateLeft(node);
             } else {
-                AVLNode child = node.getRight();
-                if(this.rootNode.getKey()==node.getKey()){
-                    this.rootNode = child;
-                }
-                node.setRight(child.getLeft());
-                child.setLeft(node);
-                node.setParent(child);
-                if(isRight){
-                    parent.setRight(child);
-                } else{
-                    parent.setLeft(child);
-                }
+              rotateLeft(node);
             }
         }
         if (bf == 2){
             if(getBF(node.getLeft()) == 1){
-
+                rotateRight(node);
             } else {
-
+                rotateLeft(node.getLeft());
+                rotateRight(node);
             }
         }
-
     }
 
     /**
@@ -201,7 +258,16 @@ public class AVLTree {
      * or null if the tree is empty
      */
     public Boolean min() {
-        return null; // to be replaced by student code
+        if (this.rootNode == null){
+            return null;
+        }
+        AVLNode node = this.rootNode;
+        AVLNode parent = node;
+        while(node.getKey() != -1){
+            parent = node;
+            node = node.getLeft();
+        }
+        return parent.getValue();
     }
 
     /**
@@ -211,7 +277,16 @@ public class AVLTree {
      * or null if the tree is empty
      */
     public Boolean max() {
-        return null; // to be replaced by student code
+        if (this.rootNode == null){
+            return null;
+        }
+        AVLNode node = this.rootNode;
+        AVLNode parent = node;
+        while(node.getKey() != -1){
+            parent = node;
+            node = node.getRight();
+        }
+        return parent.getValue();
     }
 
     /**
@@ -220,9 +295,25 @@ public class AVLTree {
      * Returns a sorted array which contains all keys in the tree,
      * or an empty array if the tree is empty.
      */
+
+    static int indexforKeysToArray=0;
+
     public int[] keysToArray() {
-        int[] arr = new int[42]; // to be replaced by student code
+        indexforKeysToArray=0;
+        int[] arr = new int[size()]; // to be replaced by student code
+        if(this.getRoot() == null){
+            return arr;
+        }
+        req_keysToArray(arr,this.getRoot());
         return arr;              // to be replaced by student code
+    }
+    private void req_keysToArray(int[] arr,AVLNode node){
+        while(node.getKey() != -1){
+            req_keysToArray(arr,node.getLeft());
+            arr[indexforKeysToArray++] = node.getKey();
+            req_keysToArray(arr,node.getRight());
+            break;
+        }
     }
 
     /**
@@ -233,8 +324,21 @@ public class AVLTree {
      * or an empty array if the tree is empty.
      */
     public boolean[] infoToArray() {
-        boolean[] arr = new boolean[42]; // to be replaced by student code
-        return arr;                    // to be replaced by student code
+        indexforKeysToArray=0;
+        boolean[] arr = new boolean[size()]; // to be replaced by student code
+        if(this.getRoot() == null){
+            return arr;
+        }
+        req_InfoToArray(arr,this.getRoot());
+        return arr;              // to be replaced by student code
+    }
+    private void req_InfoToArray(boolean[] arr,AVLNode node){
+        while(node.getKey() != -1){
+            req_InfoToArray(arr,node.getLeft());
+            arr[indexforKeysToArray++] = node.getValue();
+            req_InfoToArray(arr,node.getRight());
+            break;
+        }
     }
 
     /**
@@ -243,7 +347,11 @@ public class AVLTree {
      * Returns the number of nodes in the tree.
      */
     public int size() {
-        return 42; // to be replaced by student code
+        return this.size;
+    }
+
+    private void setSize(int size){
+        this.size = size;
     }
 
     /**
