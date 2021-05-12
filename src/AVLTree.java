@@ -20,51 +20,7 @@ public class AVLTree {
     private final AVLNode virtualNode = new AVLNode(-1,false);
     private int size = 0;
 
-
-    public static void main(String [] args){
-        AVLTree t1 = new AVLTree();
-        AVLTree t2 = new AVLTree();
-
-        t2.insert(10,false);
-        t2.insert(9,false);
-        t2.insert(8,false);
-
-
-
-        t1.insert(18,false);
-        t1.insert(20,true);
-        t1.insert(19,false);
-        t1.insert(16,false);
-        t1.insert(17,false);
-        t1.delete(20);
-//        t1.insert(15,true);
-//        t1.insert(14,true);
-        AVLTree.print(t1.getRoot());
-//        System.out.println(t1.search(21));
-
-
-//        int [] arr = t2.keysToArray();
-//        boolean [] arr2 = t2.infoToArray();
-
-//        System.out.println(Arrays.toString(arr));
-//        System.out.println(Arrays.toString(arr2));
-//
-//        AVLNode node_18 = t1.getRoot().getLeft().getRight();
-//        AVLNode node_20 = t1.getRoot().getRight();
-//
-//        System.out.println(t1.successor(node_18).getKey());
-//        System.out.println(t1.successor(node_20));
-
-//        t1.insert(9,false);
-//        t1.insert(7,false);
-
-
-
-
-    }
-
-
-
+    static int indexforKeysToArray=0;
 
     /**
      * This constructor creates an empty AVLTree.
@@ -132,7 +88,7 @@ public class AVLTree {
             return 0;
         }
         if(search(k) != null){ //if x already exists
-            return 0;
+            return -1;
         }
         setSize(this.size + 1);
         AVLNode y = null;
@@ -309,7 +265,7 @@ public class AVLTree {
     public int delete(int k) {
         AVLNode x = find(k);
         if(x == null){
-            return 0;
+            return -1;
         }
         setSize(this.size - 1);
         AVLNode y = null;
@@ -408,8 +364,6 @@ public class AVLTree {
      * or an empty array if the tree is empty.
      */
 
-    static int indexforKeysToArray=0;
-
     public int[] keysToArray() {
         indexforKeysToArray=0;
         int[] arr = new int[size()]; // to be replaced by student code
@@ -419,6 +373,7 @@ public class AVLTree {
         req_keysToArray(arr,this.getRoot());
         return arr;              // to be replaced by student code
     }
+
     private void req_keysToArray(int[] arr,AVLNode node){
         while(node.getKey() != -1){
             req_keysToArray(arr,node.getLeft());
@@ -662,8 +617,6 @@ public class AVLTree {
             if (!this.isRealNode()) return "null";
             return this.info + ":" + Integer.toString(this.key) + " " + "h = " + this.height;
         }
-
-
 
         public AVLNode(int key,boolean info){
             this.key = key;
