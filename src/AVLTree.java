@@ -25,6 +25,10 @@ public class AVLTree {
         AVLTree t1 = new AVLTree();
         AVLTree t2 = new AVLTree();
 
+        t2.insert(10,false);
+        t2.insert(9,false);
+        t2.insert(8,false);
+
 
 
         t1.insert(18,false);
@@ -32,13 +36,24 @@ public class AVLTree {
         t1.insert(19,false);
         t1.insert(16,false);
         t1.insert(17,false);
+        t1.delete(20);
+//        t1.insert(15,true);
+//        t1.insert(14,true);
         AVLTree.print(t1.getRoot());
+//        System.out.println(t1.search(21));
 
-        int [] arr = t2.keysToArray();
-        boolean [] arr2 = t2.infoToArray();
 
-        System.out.println(Arrays.toString(arr));
-        System.out.println(Arrays.toString(arr2));
+//        int [] arr = t2.keysToArray();
+//        boolean [] arr2 = t2.infoToArray();
+
+//        System.out.println(Arrays.toString(arr));
+//        System.out.println(Arrays.toString(arr2));
+//
+//        AVLNode node_18 = t1.getRoot().getLeft().getRight();
+//        AVLNode node_20 = t1.getRoot().getRight();
+//
+//        System.out.println(t1.successor(node_18).getKey());
+//        System.out.println(t1.successor(node_20));
 
 //        t1.insert(9,false);
 //        t1.insert(7,false);
@@ -68,23 +83,35 @@ public class AVLTree {
     }
 
     /**
+     *
+     * return the node with key=k or null
+     */
+    private AVLNode find(int k){
+        AVLNode x = this.rootNode;
+        while(x.isRealNode()){
+            if (k == x.key){
+                return x;
+            }
+            if(k < x.key) {
+                x = x.getLeft();
+            }
+            else {
+                x = x.getRight();
+            }
+        }
+        return null;
+    }
+
+    /**
      * public boolean search(int k)
      * <p>
      * returns the info of an item with key k if it exists in the tree
      * otherwise, returns null
      */
     public Boolean search(int k) {
-        AVLNode node = rootNode;
-        while(node!=null){
-            if(node.getKey()==k){
-                return node.getValue();
-            }
-            if(node.getKey()>k){
-                node = node.getLeft();
-            }
-            else{
-                node = node.getRight();
-            }
+        AVLNode node = this.find(k);
+        if(node != null){
+            return node.info;
         }
         return null;
     }
@@ -99,17 +126,18 @@ public class AVLTree {
      * returns -1 if an item with key k already exists in the tree.
      */
     public int insert(int k, boolean i) {
-        if(search(k) != null){
-            return 0;
-        }
-        setSize(this.size + 1);
-        AVLNode y = null;
         AVLNode x = this.rootNode;
-        AVLNode z = new AVLNode(k,i);
         if(x == null){
             insertFirst(k,i);
             return 0;
         }
+        if(search(k) != null){ //if x already exists
+            return 0;
+        }
+        setSize(this.size + 1);
+        AVLNode y = null;
+        AVLNode z = new AVLNode(k,i);
+
         while(x.isRealNode()){
             y = x;
             if(k<x.key) {
@@ -138,8 +166,9 @@ public class AVLTree {
             int right_height = y.getRight().getHeight();
 
             isHeightChanged=false;
-            if (Math.max(left_height,right_height)+1!=y.getHeight()){
-                y.setHeight(y.getHeight()+1);
+            int curr_real_height = Math.max(left_height,right_height)+1;
+            if (curr_real_height!=y.getHeight()){
+                y.setHeight(curr_real_height);
                 isHeightChanged=true;
             }
             int BF = getBF(y);
@@ -165,6 +194,7 @@ public class AVLTree {
 
     private void insertFirst(int k,boolean i){
         this.rootNode = new AVLNode(k,i);
+        setSize(this.size + 1);
     }
 
     private int getBF(AVLNode node){
@@ -192,6 +222,8 @@ public class AVLTree {
         }
         child.setParent(parent);
         node.height = Math.max(node.getLeft().getHeight(),node.getRight().getHeight())+1;
+        parent = node.getParent();
+        parent.setHeight(Math.max(parent.getLeft().getHeight(),parent.getRight().getHeight())+1);
 
     }
 
@@ -215,28 +247,55 @@ public class AVLTree {
             parent.setRight(child);
         }
         child.setParent(parent);
-        node.height = Math.max(node.getLeft().getHeight(),node.getRight().getHeight())+1;
+        node.setHeight(Math.max(node.getLeft().getHeight(),node.getRight().getHeight())+1);
+        parent = node.getParent();
+        parent.setHeight(Math.max(parent.getLeft().getHeight(),parent.getRight().getHeight())+1);
     }
 
     private void doRotation(AVLNode node){
-        int bf = getBF(node);
-        AVLNode parent = node.getParent();
-        if (bf == -2){
+        if (getBF(node) == -2){
             if(getBF(node.getRight()) == 1){
                 rotateRight(node.getRight());
-                rotateLeft(node);
-            } else {
-              rotateLeft(node);
             }
+            rotateLeft(node);
         }
-        if (bf == 2){
-            if(getBF(node.getLeft()) == 1){
-                rotateRight(node);
-            } else {
+        if (getBF(node) == 2){
+            if (getBF(node.getLeft()) == -1) {
                 rotateLeft(node.getLeft());
-                rotateRight(node);
+            }
+            rotateRight(node);
+        }
+    }
+
+    private boolean removeFromTreeCase1and2(AVLNode node){
+        if(node.getLeft().isRealNode() && node.getRight().isRealNode()){
+            return false;
+        }
+        AVLNode z = node.getParent();
+        if(!node.getLeft().isRealNode() && !node.getRight().isRealNode()){ //x is a leaf
+            if(z.getLeft().getKey() == node.getKey()){
+                z.setLeft(virtualNode);
+            } else{
+                z.setRight(virtualNode);
             }
         }
+        else if(node.getLeft().isRealNode() && !node.getRight().isRealNode()){ // x has only left child
+            if(z.getLeft().getKey() == node.getKey()){
+                z.setLeft(node.getLeft());
+            } else{
+                z.setRight(node.getLeft());
+            }
+            node.getLeft().setParent(z);
+        }
+        else if(!node.getLeft().isRealNode() && node.getRight().isRealNode()){ // x has only right child
+            if(z.getLeft().getKey() == node.getKey()){
+                z.setLeft(node.getRight());
+            } else{
+                z.setRight(node.getRight());
+            }
+            node.getRight().setParent(z);
+        }
+        return true;
     }
 
     /**
@@ -248,7 +307,58 @@ public class AVLTree {
      * returns -1 if an item with key k was not found in the tree.
      */
     public int delete(int k) {
-        return 42;    // to be replaced by student code
+        AVLNode x = find(k);
+        if(x == null){
+            return 0;
+        }
+        setSize(this.size - 1);
+        AVLNode y = null;
+        AVLNode node_to_rotate = x.getParent();
+        boolean b = removeFromTreeCase1and2(x);
+        if(!b){ // x has 2 children
+            y = this.successor(x); // we need to delete y, he has no left child
+            node_to_rotate = y.getParent();
+            removeFromTreeCase1and2(y);
+            x.getRight().setParent(y);
+            x.getLeft().setParent(y);
+            y.setLeft(x.getLeft());
+            y.setRight(x.getRight());
+            y.setParent(x.getParent());
+            if(!(this.rootNode.getKey() == x.getKey())){
+                if(x.getParent().getLeft().getKey() == x.getKey()){ //x is a left child
+                    x.getParent().setLeft(y);
+                } else{
+                    x.getParent().setRight(y);
+                }
+            }
+        }
+        boolean isHeightChanged = false;
+        int counter=0;
+        y = node_to_rotate;
+        while(y.isRealNode()){
+            int left_height = y.getLeft().getHeight();
+            int right_height = y.getRight().getHeight();
+
+            isHeightChanged=false;
+            int curr_real_height = Math.max(left_height,right_height)+1;
+            if (curr_real_height!=y.getHeight()){
+                y.setHeight(curr_real_height);
+                isHeightChanged=true;
+            }
+            int BF = getBF(y);
+            if(Math.abs(BF) < 2 && !isHeightChanged){
+                return counter;
+            }
+            else if(Math.abs(BF) < 2 && isHeightChanged){
+                y = y.getParent();
+            }
+            else {
+                doRotation(y);
+                counter++;
+                y = y.getParent();
+            }
+        }
+        return counter;
     }
 
     /**
@@ -288,6 +398,8 @@ public class AVLTree {
         }
         return parent.getValue();
     }
+
+
 
     /**
      * public int[] keysToArray()
@@ -385,6 +497,24 @@ public class AVLTree {
      * @return the successor of 'node' if exists, null otherwise
      */
     public AVLNode successor(AVLNode node){
+        AVLNode y = virtualNode;
+        if(node.getRight().isRealNode()){
+            AVLNode x = node.getRight();
+            while(x.isRealNode()){
+                y=x;
+                x=x.getLeft();
+            }
+        } else{
+            AVLNode x = node;
+            y = node.getParent();
+            while(y.isRealNode() && x == y.getRight()){
+                x=y;
+                y=x.parent;
+            }
+        }
+        if(y.isRealNode()){
+            return y;
+        }
         return null;
     }
 
@@ -528,9 +658,11 @@ public class AVLTree {
         private AVLNode parent = virtualNode;
         private int height = 0;
 
-        public String getText(){
-            if (!isRealNode()) return "null";
-            return (this.info) ? "true : "+Integer.toString(this.key) : "false : "+Integer.toString(this.key);}
+        public String getText() {
+            if (!this.isRealNode()) return "null";
+            return this.info + ":" + Integer.toString(this.key) + " " + "h = " + this.height;
+        }
+
 
 
         public AVLNode(int key,boolean info){
