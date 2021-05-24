@@ -69,22 +69,22 @@ public class tester {
         if(tree.prefixXor(8)!=false) {
             System.out.println("prefix problem");
         }
-            if(tree.prefixXor(2)!=false) {
-                System.out.println("prefix problem");
-            }
-        if(tree.succPrefixXor(7)!=false){
+        if(tree.prefixXor(2)!=false) {
             System.out.println("prefix problem");
         }
-        if(tree.succPrefixXor(8)!=false) {
-            System.out.println("prefix problem");
-        }
-        if(tree.succPrefixXor(2)!=false) {
-            System.out.println("prefix problem");
-        }
-        System.out.println("min "+tree.min());
-        System.out.println("max "+tree.max());
-        System.out.println(tree.successor(tree.getRoot().getRight())==null);
-        System.out.println(tree.successor(tree.getRoot().getLeft()).getKey());
+//        if(tree.succPrefixXor(7)!=false){
+//            System.out.println("prefix problem");
+//        }
+//        if(tree.succPrefixXor(8)!=false) {
+//            System.out.println("prefix problem");
+//        }
+//        if(tree.succPrefixXor(2)!=false) {
+//            System.out.println("prefix problem");
+//        }
+//        System.out.println("min "+tree.min());
+//        System.out.println("max "+tree.max());
+//        System.out.println(tree.successor(tree.getRoot().getRight())==null);
+//        System.out.println(tree.successor(tree.getRoot().getLeft()).getKey());
     }
 
 

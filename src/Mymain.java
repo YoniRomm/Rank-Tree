@@ -1,24 +1,94 @@
+import java.util.Arrays;
+import java.util.Random;
+
 public class Mymain {
 
     public static void main(String [] args){
         AVLTree t1 = new AVLTree();
         AVLTree t2 = new AVLTree();
+        AVLTree t3 = new AVLTree();
 
-        t2.insert(10,false);
-        t2.insert(9,false);
-        t2.insert(8,false);
+//        for(int i=0;i<=5;i++){
+//            Random random = new Random();
+//            boolean rand = random.nextBoolean();
+//            t1.insert(i,rand);
+//            if(i>=2){
+//                AVLTree.AVLNode node_2 = t1.find(2);
+//                System.out.println("when i = " + i + " parent =  " + node_2.getParent().getKey());
+//            }
+//
+//        }
+//        AVLTree.print(t1.getRoot());
+//        AVLTree.AVLNode node_2 = t1.find(2);
+//        System.out.println(node_2.getParent().getKey());
 
 
 
-        t1.insert(18,false);
-        t1.insert(20,true);
-        t1.insert(19,false);
-        t1.insert(16,false);
-        t1.insert(17,false);
-        t1.delete(20);
+
+        int j =0;
+        while(j<1000){
+            for(int i=0;i<=100;i++){
+                Random random = new Random();
+                boolean rand = random.nextBoolean();
+                t1.insert(i,rand);
+                if(i%5==0){
+                    t1.delete(i-1);
+                }
+            }
+            Random random = new Random();
+            int rand_num = random.nextInt(100);
+            while((rand_num+1) % 5 == 0){
+                rand_num = random.nextInt(100);
+            }
+            try{
+                if (t1.prefixXor(rand_num)!=t1.succPrefixXor(rand_num)){
+                    AVLTree.print(t1.getRoot());
+                    System.out.println("prefixXor = " + t1.prefixXor(rand_num) + " num " + rand_num);
+                    System.out.println("succPrefixXor = " + t1.succPrefixXor(rand_num) + " num " + rand_num);
+                    t1.prefixXor(rand_num);
+                    break;
+                }
+            }catch (Exception exception){
+                System.out.println(rand_num);
+                AVLTree.print(t1.getRoot());
+                break;
+            }
+
+            j++;
+
+        }
+        System.out.println("finished");
+//        AVLTree.print(t1.getRoot());
+
+
+
+
+
+
+
+//        if(!emptyTester()){
+//            System.out.println("empty problem");
+//        }
+//
+//
+//
+//
+//
+//        t2.insert(10,false);
+//        t2.insert(9,false);
+//        t2.insert(8,false);
+//
+//
+//
+//
+//
+//        t1.insert(10,false);
 //        t1.insert(15,true);
-//        t1.insert(14,true);
-        AVLTree.print(t1.getRoot());
+//        t1.insert(20,false);
+//        t1.insert(26,false);
+//        t1.insert(17,false);
+//
+
 //        System.out.println(t1.search(21));
 
 
@@ -41,4 +111,20 @@ public class Mymain {
 
 
     }
+
+
+    public static boolean emptyTester(){
+        AVLTree t3 = new AVLTree();
+        if(!t3.empty()){
+            return false;
+        }
+        t3.insert(10,false);
+        if(t3.empty()){
+            return false;
+        }
+        t3.delete(10);
+        return t3.empty();
+    }
+
+
 }
