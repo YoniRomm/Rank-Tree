@@ -280,13 +280,9 @@ public class AVLTree {
 
     /** O(1)
      * private boolean removeFromTreeCase1and2(AVLNode node)
-<<<<<<< HEAD
-     * make a left rotation by the description we saw in class
-=======
      * <p>
      * remove a given node from a BST if the node matches
      * case 1 or 2 in the presentation (the node doesn't have 2 children)
->>>>>>> 400bc39615de95161eb709d41da82c0079877fc7
      */
     private boolean removeFromTreeCase1and2(AVLNode node){
         if(this.size == 1){
@@ -336,9 +332,6 @@ public class AVLTree {
         return true;
     }
 
-<<<<<<< HEAD
-    /** O(log n)
-=======
     /** O(logn)
      * private AVLNode removeFromTreeCase3(AVLNode x)
      * <p>
@@ -368,7 +361,6 @@ public class AVLTree {
     }
 
     /**
->>>>>>> 400bc39615de95161eb709d41da82c0079877fc7
      * public int delete(int k)
      * <p>
      * deletes an item with key k from the binary tree, if it is there;
