@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -14,7 +13,7 @@ import java.util.List;
  * according to your needs.
  */
 
-public class AVLTree {
+public class BST {
 
     private AVLNode rootNode; //root of the tree
     private final AVLNode virtualNode = new AVLNode(-1,false); //virtual node,
@@ -27,7 +26,7 @@ public class AVLTree {
      * public AVLTree()
      * This constructor creates an empty AVLTree.
      */
-    public AVLTree(){
+    public BST(){
         this.virtualNode.setHeight(-1);
     }
 
@@ -117,38 +116,38 @@ public class AVLTree {
         } else{
             y.setRight(z);
         }
-        update_Xor_to_root(z);
+//        update_Xor_to_root(z);
         int counter=0;
-        boolean isHeightChanged;
-        AVLNode node_to_rotate = virtualNode;
-        while(y.isRealNode()){
-            int left_height = y.getLeft().getHeight();
-            int right_height = y.getRight().getHeight();
-
-            isHeightChanged=false;
-            int curr_real_height = Math.max(left_height,right_height)+1;
-            if (curr_real_height!=y.getHeight()){
-                y.setHeight(curr_real_height);
-                isHeightChanged=true;
-            }
-            int BF = getBF(y);
-            if(Math.abs(BF) < 2 && !isHeightChanged){
-                return counter;
-            }
-            else if(Math.abs(BF) < 2 && isHeightChanged){
-                y = y.getParent();
-            }
-            else {
-                if(node_to_rotate.getKey()==-1){
-                    node_to_rotate=y;
-                }
-                counter++;
-                break;
-            }
-        }
-        if(node_to_rotate.isRealNode()){
-            doRotation(node_to_rotate);
-        }
+//        boolean isHeightChanged;
+//        AVLNode node_to_rotate = virtualNode;
+//        while(y.isRealNode()){
+//            int left_height = y.getLeft().getHeight();
+//            int right_height = y.getRight().getHeight();
+//
+//            isHeightChanged=false;
+//            int curr_real_height = Math.max(left_height,right_height)+1;
+//            if (curr_real_height!=y.getHeight()){
+//                y.setHeight(curr_real_height);
+//                isHeightChanged=true;
+//            }
+//            int BF = getBF(y);
+//            if(Math.abs(BF) < 2 && !isHeightChanged){
+//                return counter;
+//            }
+//            else if(Math.abs(BF) < 2 && isHeightChanged){
+//                y = y.getParent();
+//            }
+//            else {
+//                if(node_to_rotate.getKey()==-1){
+//                    node_to_rotate=y;
+//                }
+//                counter++;
+//                break;
+//            }
+//        }
+//        if(node_to_rotate.isRealNode()){
+//            doRotation(node_to_rotate);
+//        }
         return counter;
     }
 

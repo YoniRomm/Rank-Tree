@@ -3,54 +3,66 @@ import java.util.Random;
 
 public class Mymain {
 
+    public static void testPredixXor(AVLTree t1){
+        int j =0;
+        while(j<1000){
+            for(int i=0;i<=100;i++){
+                Random random = new Random();
+                boolean rand = random.nextBoolean();
+                t1.insert(i,rand);
+                if(i%5==0){
+                    t1.delete(i-1);
+                }
+            }
+            Random random = new Random();
+            int rand_num = random.nextInt(100);
+            while((rand_num+1) % 5 == 0){
+                rand_num = random.nextInt(100);
+            }
+            try{
+                if (t1.prefixXor(rand_num)!=t1.succPrefixXor(rand_num)){
+                    AVLTree.print(t1.getRoot());
+                    System.out.println("prefixXor = " + t1.prefixXor(rand_num) + " num " + rand_num);
+                    System.out.println("succPrefixXor = " + t1.succPrefixXor(rand_num) + " num " + rand_num);
+                    t1.prefixXor(rand_num);
+                    break;
+                }
+            }catch (Exception exception){
+                System.out.println(rand_num);
+                AVLTree.print(t1.getRoot());
+                break;
+            }
+
+            j++;
+
+        }
+    }
+
     public static void main(String [] args){
         AVLTree t1 = new AVLTree();
-        AVLTree t2 = new AVLTree();
+        BST t2 = new BST();
         AVLTree t3 = new AVLTree();
 
         t1.insert(1,true);
         t1.insert(2,true);
         t1.insert(0,true);
         t1.delete(1);
-        AVLTree.print(t1.getRoot());
+
+//        testTime1(t1);
+
+        for(int i=0;i<10;i++){
+            t2.insert(i,true);
+        }
+        BST.print(t2.getRoot());
 
 
 
 
 
 
-//        int j =0;
-//        while(j<1000){
-//            for(int i=0;i<=100;i++){
-//                Random random = new Random();
-//                boolean rand = random.nextBoolean();
-//                t1.insert(i,rand);
-//                if(i%5==0){
-//                    t1.delete(i-1);
-//                }
-//            }
-//            Random random = new Random();
-//            int rand_num = random.nextInt(100);
-//            while((rand_num+1) % 5 == 0){
-//                rand_num = random.nextInt(100);
-//            }
-//            try{
-//                if (t1.prefixXor(rand_num)!=t1.succPrefixXor(rand_num)){
-//                    AVLTree.print(t1.getRoot());
-//                    System.out.println("prefixXor = " + t1.prefixXor(rand_num) + " num " + rand_num);
-//                    System.out.println("succPrefixXor = " + t1.succPrefixXor(rand_num) + " num " + rand_num);
-//                    t1.prefixXor(rand_num);
-//                    break;
-//                }
-//            }catch (Exception exception){
-//                System.out.println(rand_num);
-//                AVLTree.print(t1.getRoot());
-//                break;
-//            }
-//
-//            j++;
-//
-//        }
+
+
+
         System.out.println("finished");
 //        AVLTree.print(t1.getRoot());
 
