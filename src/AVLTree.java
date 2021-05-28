@@ -16,20 +16,21 @@ import java.util.List;
 
 public class AVLTree {
 
-    private AVLNode rootNode;
-    private final AVLNode virtualNode = new AVLNode(-1,false);
-    private int size = 0;
+    private AVLNode rootNode; //root of the tree
+    private final AVLNode virtualNode = new AVLNode(-1,false); //virtual node,
+    // parent of root and child of every node that dont have real left or right child
+    private int size = 0; //the amount of nodes in the tree
 
-    private static int indexforKeysToArray=0;
+    private static int indexforKeysToArray=0; //global counter for recursive calls
 
-    /**
+    /** O(1)
      * This constructor creates an empty AVLTree.
      */
     public AVLTree(){
         this.virtualNode.setHeight(-1);
     }
 
-    /**
+    /** O(1)
      * public boolean empty()
      * <p>
      * returns true if and only if the tree is empty
@@ -38,7 +39,7 @@ public class AVLTree {
         return this.rootNode == null;
     }
 
-    /**
+    /** O(logn)
      *
      * return the node with key = k or null
      */
@@ -58,7 +59,7 @@ public class AVLTree {
         return null;
     }
 
-    /**
+    /** O(logn)
      * public boolean search(int k)
      * <p>
      * returns the info of an item with key k if it exists in the tree
@@ -72,7 +73,7 @@ public class AVLTree {
         return null;
     }
 
-    /**
+    /** O(logn)
      * public int insert(int k, boolean i)
      * <p>
      * inserts an item with key k and info i to the AVL tree.
@@ -150,6 +151,10 @@ public class AVLTree {
         return counter;
     }
 
+    /** O(logn)
+     *
+     * update the Xor of all the nodes in the path from the node to the root
+     */
     private void update_Xor_to_root(AVLNode node){
         update_Xor(node);
         AVLNode parent = node.getParent();
@@ -159,15 +164,35 @@ public class AVLTree {
         }
     }
 
+    /** O(1)
+     *
+     * update the Xor of the given node by his childes
+     */
+    private void update_Xor(AVLNode node){
+        node.Xor = node.info ^ node.getLeft().Xor ^ node.getRight().Xor;
+    }
+
+    /** O(1)
+     *
+     * insert node if the tree empty
+     */
     private void insertFirst(int k,boolean i){
         this.rootNode = new AVLNode(k,i);
         setSize(this.size + 1);
     }
 
+    /** O(1)
+     *
+     * return the BF of a given node.
+     */
     private int getBF(AVLNode node){
         return node.getLeft().getHeight() - node.getRight().getHeight();
     }
 
+    /** O(1)
+     *
+     * make a left rotation by the description we saw in class
+     */
     private void rotateLeft(AVLNode node){
         AVLNode parent = node.getParent();
         AVLNode child = node.getRight();
@@ -197,6 +222,10 @@ public class AVLTree {
 
     }
 
+    /** O(1)
+     *
+     * make a right rotation by the description we saw in class
+     */
     private void rotateRight(AVLNode node){
         AVLNode parent = node.getParent();
         AVLNode child = node.getLeft();
@@ -226,10 +255,10 @@ public class AVLTree {
 
     }
 
-    private void update_Xor(AVLNode node){
-        node.Xor = node.info ^ node.getLeft().Xor ^ node.getRight().Xor;
-    }
-
+    /** O(1)
+     *
+     * analyze the type of criminal node (what BF) and call the rotations functions
+     */
     private void doRotation(AVLNode node){
         if (getBF(node) == -2){
             if(getBF(node.getRight()) == 1){
@@ -245,6 +274,10 @@ public class AVLTree {
         }
     }
 
+    /** O(1)
+     *
+     * make a left rotation by the description we saw in class
+     */
     private boolean removeFromTreeCase1and2(AVLNode node){
         if(node.getLeft().isRealNode() && node.getRight().isRealNode()){
             return false;
