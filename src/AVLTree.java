@@ -156,6 +156,9 @@ public class AVLTree {
      * update the Xor of all the nodes in the path from the node to the root
      */
     private void update_Xor_to_root(AVLNode node){
+        if(!node.isRealNode()){
+            return;
+        }
         update_Xor(node);
         AVLNode parent = node.getParent();
         while (parent.isRealNode()){
@@ -275,16 +278,30 @@ public class AVLTree {
     }
 
     /** O(1)
-     *
-     * make a left rotation by the description we saw in class
+     * private boolean removeFromTreeCase1and2(AVLNode node)
+     * <p>
+     * remove a given node from a BST if the node matches
+     * case 1 or 2 in the presentation (the node doesn't have 2 children)
      */
     private boolean removeFromTreeCase1and2(AVLNode node){
+        if(this.size == 1){
+            this.rootNode = null;
+            setSize(0);
+            return true;
+        }
+        if(this.size == 2){
+            if(node.getKey() == this.rootNode.getKey()){
+                if(node.getLeft().isRealNode()){
+                    this.rootNode = node.getLeft();
+                } else{
+                    this.rootNode = node.getRight();
+                }
+                setSize(1);
+                return true;
+            }
+        }
         if(node.getLeft().isRealNode() && node.getRight().isRealNode()){
             return false;
-        }
-        if(node.getKey() == this.rootNode.getKey()){
-            this.rootNode = null;
-            return true;
         }
         AVLNode z = node.getParent();
         if(!node.getLeft().isRealNode() && !node.getRight().isRealNode()){ //x is a leaf
@@ -310,7 +327,36 @@ public class AVLTree {
             }
             node.getRight().setParent(z);
         }
+        setSize(size-1);
         return true;
+    }
+
+    /** O(logn)
+     * private AVLNode removeFromTreeCase3(AVLNode x)
+     * <p>
+     * remove a given node from a BST if the node matches
+     * case 3 in the presentation (the node has 2 children)
+     */
+    private AVLNode removeFromTreeCase3(AVLNode x){
+        AVLNode y = this.successor(x); // we need to delete y, he has no left child
+        AVLNode node_to_rotate = y.getParent();
+        removeFromTreeCase1and2(y);
+        x.getRight().setParent(y);
+        x.getLeft().setParent(y);
+        y.setLeft(x.getLeft());
+        y.setRight(x.getRight());
+        y.setParent(x.getParent());
+        if(!(this.rootNode.getKey() == x.getKey())){
+            if(x.getParent().getLeft().getKey() == x.getKey()){ //x is a left child
+                x.getParent().setLeft(y);
+            } else{
+                x.getParent().setRight(y);
+            }
+        }
+        if(x.getKey() == this.rootNode.getKey()){
+            this.rootNode = y;
+        }
+        return node_to_rotate;
     }
 
     /**
@@ -326,26 +372,11 @@ public class AVLTree {
         if(x == null){
             return -1;
         }
-        setSize(this.size - 1);
         AVLNode y = null;
         AVLNode node_to_rotate = x.getParent();
         boolean b = removeFromTreeCase1and2(x);
         if(!b){ // x has 2 children
-            y = this.successor(x); // we need to delete y, he has no left child
-            node_to_rotate = y.getParent();
-            removeFromTreeCase1and2(y);
-            x.getRight().setParent(y);
-            x.getLeft().setParent(y);
-            y.setLeft(x.getLeft());
-            y.setRight(x.getRight());
-            y.setParent(x.getParent());
-            if(!(this.rootNode.getKey() == x.getKey())){
-                if(x.getParent().getLeft().getKey() == x.getKey()){ //x is a left child
-                    x.getParent().setLeft(y);
-                } else{
-                    x.getParent().setRight(y);
-                }
-            }
+            node_to_rotate = removeFromTreeCase3(x);
         }
         update_Xor_to_root(node_to_rotate);
         boolean isHeightChanged = false;

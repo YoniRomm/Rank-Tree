@@ -10,6 +10,7 @@ public class Mymain {
 
         t1.insert(1,true);
         t1.insert(2,true);
+        t1.insert(0,true);
         t1.delete(1);
         AVLTree.print(t1.getRoot());
 
