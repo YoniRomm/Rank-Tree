@@ -24,6 +24,7 @@ public class AVLTree {
     private static int indexforKeysToArray=0; //global counter for recursive calls
 
     /** O(1)
+     * public AVLTree()
      * This constructor creates an empty AVLTree.
      */
     public AVLTree(){
@@ -40,7 +41,7 @@ public class AVLTree {
     }
 
     /** O(logn)
-     *
+     * public AVLNode find(int k)
      * return the node with key = k or null
      */
     public AVLNode find(int k){
@@ -152,7 +153,7 @@ public class AVLTree {
     }
 
     /** O(logn)
-     *
+     * private void update_Xor_to_root(AVLNode node)
      * update the Xor of all the nodes in the path from the node to the root
      */
     private void update_Xor_to_root(AVLNode node){
@@ -165,7 +166,7 @@ public class AVLTree {
     }
 
     /** O(1)
-     *
+     * private void update_Xor(AVLNode node)
      * update the Xor of the given node by his childes
      */
     private void update_Xor(AVLNode node){
@@ -173,7 +174,7 @@ public class AVLTree {
     }
 
     /** O(1)
-     *
+     * private void insertFirst(int k,boolean i)
      * insert node if the tree empty
      */
     private void insertFirst(int k,boolean i){
@@ -182,7 +183,7 @@ public class AVLTree {
     }
 
     /** O(1)
-     *
+     * private int getBF(AVLNode node)
      * return the BF of a given node.
      */
     private int getBF(AVLNode node){
@@ -190,7 +191,7 @@ public class AVLTree {
     }
 
     /** O(1)
-     *
+     * private void rotateLeft(AVLNode node)
      * make a left rotation by the description we saw in class
      */
     private void rotateLeft(AVLNode node){
@@ -223,7 +224,7 @@ public class AVLTree {
     }
 
     /** O(1)
-     *
+     * private void rotateRight(AVLNode node)
      * make a right rotation by the description we saw in class
      */
     private void rotateRight(AVLNode node){
@@ -256,7 +257,7 @@ public class AVLTree {
     }
 
     /** O(1)
-     *
+     * private void doRotation(AVLNode node)
      * analyze the type of criminal node (what BF) and call the rotations functions
      */
     private void doRotation(AVLNode node){
@@ -275,7 +276,7 @@ public class AVLTree {
     }
 
     /** O(1)
-     *
+     * private boolean removeFromTreeCase1and2(AVLNode node)
      * make a left rotation by the description we saw in class
      */
     private boolean removeFromTreeCase1and2(AVLNode node){
@@ -313,7 +314,7 @@ public class AVLTree {
         return true;
     }
 
-    /**
+    /** O(log n)
      * public int delete(int k)
      * <p>
      * deletes an item with key k from the binary tree, if it is there;
@@ -377,11 +378,12 @@ public class AVLTree {
         return counter;
     }
 
-    /**
+    /** O(logn)
      * public Boolean min()
      * <p>
      * Returns the info of the item with the smallest key in the tree,
      * or null if the tree is empty
+     * uses auxilary function findMin()
      */
     public Boolean min() {
         AVLNode node = findMin();
@@ -391,7 +393,7 @@ public class AVLTree {
         return node.getValue();
     }
 
-    /**
+    /** O(logn)
      * public Boolean max()
      * <p>
      * Returns the info of the item with the largest key in the tree,
@@ -409,7 +411,11 @@ public class AVLTree {
         }
         return parent.getValue();
     }
-
+    /** O(logn)
+     * private AVLNode findMin()
+     * Returns the info of the item with the smallest key in the tree,
+     * or null if the tree is empty
+     */
     private AVLNode findMin(){
         if (this.rootNode == null){
             return null;
@@ -424,24 +430,27 @@ public class AVLTree {
     }
 
 
-
-    /**
+    /** O(n)
      * public int[] keysToArray()
      * <p>
      * Returns a sorted array which contains all keys in the tree,
      * or an empty array if the tree is empty.
+     * uses auxilary function req_KeysToArray
      */
 
     public int[] keysToArray() {
         indexforKeysToArray=0;
-        int[] arr = new int[size()]; // to be replaced by student code
+        int[] arr = new int[size()];
         if(this.getRoot() == null){
             return arr;
         }
         req_keysToArray(arr,this.getRoot());
-        return arr;              // to be replaced by student code
+        return arr;
     }
-
+    /** O(n)
+     * private void req_keysToArray()
+     * Fills an array with all keys in the tree by order
+     */
     private void req_keysToArray(int[] arr,AVLNode node){
         while(node.getKey() != -1){
             req_keysToArray(arr,node.getLeft());
@@ -451,23 +460,27 @@ public class AVLTree {
         }
     }
 
-    /**
+    /** O(n)
      * public boolean[] infoToArray()
      * <p>
      * Returns an array which contains all info in the tree,
      * sorted by their respective keys,
      * or an empty array if the tree is empty.
+     * uses auxilary function req_InfoToArray
      */
     public boolean[] infoToArray() {
         indexforKeysToArray=0;
-        boolean[] arr = new boolean[size()]; // to be replaced by student code
+        boolean[] arr = new boolean[size()];
         if(this.getRoot() == null){
             return arr;
         }
         req_InfoToArray(arr,this.getRoot());
-        return arr;              // to be replaced by student code
+        return arr;
     }
-
+    /** O(n)
+     * private void req_InfoToArray()
+     * Fills an array with all Info of Keys in the tree by order
+     */
     private void req_InfoToArray(boolean[] arr,AVLNode node){
         while(node.getKey() != -1){
             req_InfoToArray(arr,node.getLeft());
@@ -477,7 +490,7 @@ public class AVLTree {
         }
     }
 
-    /**
+    /** O(1)
      * public int size()
      * <p>
      * Returns the number of nodes in the tree.
@@ -485,12 +498,16 @@ public class AVLTree {
     public int size() {
         return this.size;
     }
-
+    /** O(1)
+     * private void setSize(int size)
+     * <p>
+     * updates the number of nodes in the tree by a given int value size
+     */
     private void setSize(int size){
         this.size = size;
     }
 
-    /**
+    /** O(1)
      * public int getRoot()
      * <p>
      * Returns the root AVL node, or null if the tree is empty
@@ -499,17 +516,17 @@ public class AVLTree {
         return this.rootNode;
     }
 
-    /**
+    /** O(logn)
      * public boolean prefixXor(int k)
      *
      * Given an argument k which is a key in the tree, calculate the xor of the values of nodes whose keys are
      * smaller or equal to k.
      *
      * precondition: this.search(k) != null
-     *
+     * uses auxilarity function find()
      */
     public boolean prefixXor(int k){
-        AVLNode node = find(k);
+        AVLNode node = find(k); // O(logn)
         boolean b = node.Xor ^ node.getRight().Xor;
         AVLNode parent = node.getParent();
         while(parent.isRealNode()){
@@ -522,7 +539,7 @@ public class AVLTree {
         return b;
     }
 
-    /**
+    /** O(logn)
      * public AVLNode successor
      *
      * given a node 'node' in the tree, return the successor of 'node' in the tree (or null if successor doesn't exist)
@@ -552,7 +569,7 @@ public class AVLTree {
         return null;
     }
 
-    /**
+    /** O(n logn)
      * public boolean succPrefixXor(int k)
      *
      * This function is identical to prefixXor(int k) in terms of input/output. However, the implementation of
@@ -571,7 +588,10 @@ public class AVLTree {
         num_of_True = node.info ? num_of_True+1 : num_of_True; //check for node k itself
         return num_of_True % 2 != 0;
     }
-
+    /** O(n)
+     * public static void print(AVLNode root)
+     * prints the tree.
+     */
     public static void print(AVLNode root) {
         List<List<String>> lines = new ArrayList<List<String>>();
 
@@ -678,7 +698,6 @@ public class AVLTree {
         }
     }
 
-
     /**
      * public class AVLNode
      * <p>
@@ -692,83 +711,114 @@ public class AVLTree {
      */
     public class AVLNode {
 
-        private int key;
-        private boolean info;
-        private AVLNode leftChild = virtualNode;
-        private AVLNode rightChild = virtualNode;
-        private AVLNode parent = virtualNode;
-        private int height = 0;
-        private boolean Xor;
-
+        private int key; // key of a given node (int)
+        private boolean info; // the boolean value of a node
+        private AVLNode leftChild = virtualNode; // the adress of the left child of node
+        private AVLNode rightChild = virtualNode; // the adress of the right child of node
+        private AVLNode parent = virtualNode; // the adress of the parent child of node,
+                                              // if node is root, parent == virtualNode.
+        private int height = 0; // the height of node in the tree
+        private boolean Xor; // == the Xor of node and his childes
+        /** O(1)
+         * public String getText()
+         * return a String which represents description of the node
+         */
         public String getText() {
             if (!this.isRealNode()) return "null";
             return this.info + ":" + Integer.toString(this.key) + " " + "h = " + this.height + " Xor = " + this.Xor;
         }
-
+        /** O(1)
+         * public AVLNode(int key,boolean info)
+         * constractur of AVLNode by key and info
+         */
         public AVLNode(int key,boolean info){
             this.key = key;
             this.info = info;
             this.Xor = info;
         }
+        /** O(1)
+         * public int getKey()
+         * returns node's key (for virtual node return -1)
+         */
 
-        //returns node's key (for virtual node return -1)
         public int getKey() {
             return this.key;
         }
-
-        //returns node's value [info] (for virtual node return null)
+        /** O(1)
+         * public Boolean getValue()
+         * returns node's value [info] (for virtual node return null)
+         */
         public Boolean getValue() {
             if (this.key == -1){
                 return null;
             }
             return this.info;
         }
-
-        //sets left child
+        /** O(1)
+         * public void setLeft(AVLNode node)
+         * sets left child
+         */
         public void setLeft(AVLNode node) {
             this.leftChild = node;
         }
-
-        //returns left child (if there is no left child return null)
+        /** O(1)
+         * public AVLNode getLeft()
+         * returns left child (if there is no left child return null)
+         */
         public AVLNode getLeft() {
             return this.leftChild;
         }
 
-        //sets right child
+        /** O(1)
+         * public void setRight(AVLNode node)
+         * sets Right child
+         */
         public void setRight(AVLNode node) {
-            this.rightChild = node; // to be replaced by student code
+            this.rightChild = node;
         }
-
-        //returns right child (if there is no right child return null)
+        /** O(1)
+         * public AVLNode getRight()
+         * returns right child (if there is no left child return null)
+         */
         public AVLNode getRight() {
-            return this.rightChild; // to be replaced by student code
+            return this.rightChild;
         }
-
-        //sets parent
+        /** O(1)
+         * public void setParent(AVLNode node)
+         * sets parent of node
+         */
         public void setParent(AVLNode node) {
-            this.parent = node; // to be replaced by student code
+            this.parent = node;
         }
-
-        //returns the parent (if there is no parent return null)
+        /** O(1)
+         * public AVLNode getParent()
+         * returns the parent (if there is no parent return null)
+         */
         public AVLNode getParent() {
-            return this.parent; // to be replaced by student code
+            return this.parent;
         }
-
-        // Returns True if this is a non-virtual AVL node
+        /** O(1)
+         * public boolean isRealNode()
+         * Returns True if this is a non-virtual AVL node
+         */
         public boolean isRealNode() {
             return this.key != -1;
         }
-        // sets the height of the node
+        /** O(1)
+         * public void setHeight(int height)
+         * sets the height of the node
+         */
         public void setHeight(int height) {
             this.height = height;
         }
-
-        // Returns the height of the node (-1 for virtual nodes)
+        /** O(1)
+         * public int getHeight()
+         * Returns the height of the node (-1 for virtual nodes)
+         */
         public int getHeight() {
-            return this.height; // to be replaced by student code
+            return this.height;
         }
     }
-
 }
 
 
