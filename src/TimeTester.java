@@ -14,30 +14,24 @@ public class TimeTester {
         fakeRun();
 
         for(int i=1;i<=5;i++){
-            long sum1=0;
-            long sum2=0;
-            for(int k=0;k<10;k++){
-                AVLTree t1 = new AVLTree();
-                for(int j=1;j<500*i;j++){
-                    t1.insert(j,false);
-                }
-                long start = System.nanoTime();
-                for(int j=1;j<100;j++){
-                    t1.prefixXor(j);
-                }
-                long end = System.nanoTime();
-                long average = (end-start)/(500*i);
-                long start2 = System.nanoTime();
-                for(int j=1;j<100;j++){
-                    t1.succPrefixXor(j);
-                }
-                long end2 = System.nanoTime();
-                long average2 = (end2-start2)/(500*i);
-                sum1 += average;
-                sum2 += average2;
+            AVLTree t1 = new AVLTree();
+            for(int j=1;j<500*i;j++){
+                t1.insert(j,false);
             }
-            System.out.println("average prefixXor with i = " + i + " " +  sum1/10);
-            System.out.println("average succPrefixXor with i = " + i + " " +  sum2/10);
+            long start = System.nanoTime();
+            for(int j=1;j<100;j++){
+                t1.prefixXor(j);
+            }
+            long end = System.nanoTime();
+            long average = (end-start)/(100);
+            long start2 = System.nanoTime();
+            for(int j=1;j<100;j++){
+                t1.succPrefixXor(j);
+            }
+            long end2 = System.nanoTime();
+            long average2 = (end2-start2)/(100);
+            System.out.println("average prefixXor with i = " + i + " " +  average);
+            System.out.println("average succPrefixXor with i = " + i + " " +  average2);
 
 
         }
@@ -104,12 +98,12 @@ public class TimeTester {
     public static void testTime2RandomSequence(){
         fakeRun();
         Random random = new Random();
-        for(int i=1;i<=5;i++) {
+        for(int i=10;i<=15;i++) {
             BST bst1 = new BST();
             AVLTree t1 = new AVLTree();
             long start = System.nanoTime();
             for (int j = 1; j <= 1000 * i; j++) {
-                bst1.insert(random.nextInt(1000*i),false);
+                t1.insert(random.nextInt(1000*i),false);
             }
             long end = System.nanoTime();
             long average = (end-start)/(1000*i);
@@ -120,7 +114,7 @@ public class TimeTester {
 
     public static void main(String [] args){
 
-        testTime2RandomSequence();
+        testTime1();
 
     }
 }
